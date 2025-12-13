@@ -1,8 +1,10 @@
-import { YOUTUBE_TRANSCRIPT_API_URL } from "@/constants";
-import { TranscriptItem } from "@/types";
+import { Supadata, TranscriptOrJobId, Transcript } from "@supadata/js";
 
+// Initialize the client
+const supadata = new Supadata({
+  apiKey: process.env.NEXT_SUPADATA_API_KEY || "",
+});
 export class TranscriptService {
-
   // Server-side method - direct API call
   static async fetchYouTubeTranscript(videoId: string): Promise<string | null> {
     try {
@@ -11,29 +13,18 @@ export class TranscriptService {
         throw new Error("Video ID is required and cannot be empty");
       }
 
-      const options = {
-        method: "GET",
-        headers: {
-          "x-rapidapi-key":
-            process.env.NEXT_YOUTUBE_TRANSCRIPT_RAPID_API_KEY || "",
-          "x-rapidapi-host":
-            process.env.NEXT_YOUTUBE_TRANSCRIPT_RAPID_API_HOST || "",
-        },
-      };
-      const url = `${YOUTUBE_TRANSCRIPT_API_URL}${videoId.trim()}`;
-      const response = await fetch(url, options);
-      const json = await response.json();
-      const result = json?.transcript as TranscriptItem[];
+      const response: TranscriptOrJobId = await supadata.transcript({
+        url: `https://www.youtube.com/watch?v=${videoId.trim()}`,
+        lang: "en",
+        text: true,
+        mode: "auto",
+      });
 
-      const formattedTranscript = result
-        ?.map((entry: TranscriptItem) => entry.text)
-        .join(" ");
-
-      if (!formattedTranscript) {
-        throw new Error("No transcript available for this video");
+      if (response as Transcript) {
+        return (response as Transcript)?.content as string;
+      } else {
+        return null;
       }
-
-      return formattedTranscript;
     } catch (error: any) {
       console.error("Error fetching transcript (server-side):", error);
       throw new Error(`Failed to fetch transcript: ${error.message || error}`);
