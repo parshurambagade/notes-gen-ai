@@ -3,6 +3,7 @@ import { redirect, useRouter } from "next/navigation";
 import { validateRegistrationForm } from "@/utils/validation";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
+import { useAuth } from "@/contexts/authContext";
 
 export const useRegister = () => {
   const [name, setName] = useState("");
@@ -10,8 +11,7 @@ export const useRegister = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const router = useRouter();
+  const { refetch } = useAuth();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,12 +35,16 @@ export const useRegister = () => {
           //show loading
           setIsLoading(true);
         },
-        onSuccess: (ctx) => {
+        onSuccess: async (ctx) => {
           //redirect to the dashboard or sign in page
           toast.success("Account created successfully!", {
             description: "Welcome to NotesGen AI! You're now logged in.",
             duration: 4000,
           });
+
+          // Refetch the auth context
+          await refetch();
+
           redirect("/notes/all");
         },
         onError: (ctx) => {

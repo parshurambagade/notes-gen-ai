@@ -51,7 +51,7 @@ function LoginForm() {
             Enter your email below to login to your account
           </CardDescription>
           <CardAction>
-            <Link href={"/register"} tabIndex={0}>
+            <Link href={"/auth/register"} tabIndex={0}>
               <Button variant="link" className="cursor-pointer">
                 Sign Up
               </Button>

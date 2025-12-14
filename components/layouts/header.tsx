@@ -71,7 +71,7 @@ export default function MainHeader() {
             </div>
           </nav>
           {!user ? (
-            <Link href={"/login"} className="my-2 hidden md:flex">
+            <Link href={"/auth/login"} className="my-2 hidden md:flex">
               <Button variant={"outline"} className="cursor-pointer">
                 Log In
               </Button>
@@ -86,10 +86,10 @@ export default function MainHeader() {
                       alt="User Avatar"
                     />
                     <AvatarFallback>
-                      {user?.user_metadata?.display_name}
+                      {user?.name}
                     </AvatarFallback>
                   </Avatar>
-                  <p>{user?.user_metadata?.display_name}</p>
+                  <p>{user?.name}</p>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                   <DropdownMenuItem
@@ -157,10 +157,10 @@ export default function MainHeader() {
                       alt="User Avatar"
                     />
                     <AvatarFallback>
-                      {user?.user_metadata?.display_name}
+                      {user?.name}
                     </AvatarFallback>
                   </Avatar>
-                  <p>{user?.user_metadata?.display_name}</p>
+                  <p>{user?.name}</p>
                 </div>
                 <Button
                   variant="outline"

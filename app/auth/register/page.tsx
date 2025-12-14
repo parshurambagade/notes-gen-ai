@@ -38,7 +38,7 @@ const Register = () => {
           <CardAction>
             <Button
               variant="link"
-              onClick={() => router.push("/login")}
+              onClick={() => router.push("/auth/login")}
               className="cursor-pointer"
               disabled={isLoading}
             >

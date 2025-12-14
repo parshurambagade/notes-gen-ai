@@ -1,7 +1,7 @@
+import { auth } from "@/lib/auth";
+import { authClient } from "@/lib/auth-client";
 import { NotesData, SavedNote, VideoData } from "@/types";
 import { convertMarkdownToJson } from "@/utils/notes";
-import supabase from "@/utils/supabase/client";
-
 export class NotesService {
   static async generateNotes(videoId: string): Promise<NotesData> {
     if (!videoId) {
@@ -58,11 +58,11 @@ export class NotesService {
     try {
       // Get current user
       const {
-        data: { user },
+        data: session,
         error: userError,
-      } = await supabase.auth.getUser();
+      } = await authClient?.getSession();;
 
-      if (userError || !user) {
+      if (userError || !session?.user) {
         throw new Error("You must be logged in to save notes");
       }
 
@@ -70,7 +70,7 @@ export class NotesService {
       const { data: existingNotes, error: checkError } = await supabase
         .from("notes")
         .select("id")
-        .eq("user_id", user.id)
+        .eq("user_id", session?.user?.id)
         .eq("video_id", videoData.videoId)
         .single();
 
@@ -79,7 +79,7 @@ export class NotesService {
       }
 
       const noteData = {
-        user_id: user.id,
+        user_id: session?.user?.id,
         video_id: videoData.videoId,
         video_title: videoData.title,
         video_channel: videoData.channel,
