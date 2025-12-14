@@ -5,9 +5,13 @@ import BackButton from "@/components/common/back-button";
 import { useAllSavedNotesByUserId } from "@/hooks/useAllSavedNotes";
 import React, { useEffect, useState } from "react";
 import useSavedNotesStore from "@/stores/saved-notes-store";
+import { redirect } from "next/navigation";
+import { useAuth } from "@/contexts/authContext";
 
 const AllNotes = () => {
   const [isClient, setIsClient] = useState(false);
+
+  const { user } = useAuth();
 
   const { loading, error } = useAllSavedNotesByUserId();
 
@@ -18,6 +22,10 @@ const AllNotes = () => {
   }, []);
 
   if (!isClient) return null;
+
+  if (!user) {
+    redirect("/auth/login");
+  }
 
   return (
     <main className="min-h-[95vh] py-20 px-4 container mx-auto">
