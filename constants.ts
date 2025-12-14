@@ -45,7 +45,8 @@ Instructions:
 
 Here is the transcript:`;
 
-export const NEXTAUTH_URL = process.env.NEXTAUTH_URL || "http://localhost:3000";
+export const BETTER_AUTH_URL =
+  process.env.NEXT_PUBLIC_BETTER_AUTH_URL || "http://localhost:3000";
 
-export const YOUTUBE_TRANSCRIPT_API_URL =
-  "https://youtube-transcript3.p.rapidapi.com/api/transcript?videoId=";
+export const MONGODB_CONNECTION_STRING =
+  process.env.NEXT_PUBLIC_MONGODB_CONNECTION_STRING || "";
