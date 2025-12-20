@@ -1,44 +1,23 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist } from "next/font/google";
+import { ThemeProvider } from "next-themes";
 import "./globals.css";
-import MainHeader from "@/components/layouts/header";
-import Footer from "@/components/layouts/footer";
-import { Toaster } from "@/components/ui/sonner";
-import { AuthProvider } from "@/contexts/authContext";
+
+const defaultUrl = process.env.VERCEL_URL
+  ? `https://${process.env.VERCEL_URL}`
+  : "http://localhost:3000";
+
+export const metadata: Metadata = {
+  metadataBase: new URL(defaultUrl),
+  title: "Next.js and Supabase Starter Kit",
+  description: "The fastest way to build apps with Next.js and Supabase",
+};
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
+  display: "swap",
   subsets: ["latin"],
 });
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-}); 
-
-export const metadata: Metadata = {
-  title: "NotesGen AI - AI Powered YouTube Notes",
-  description:
-    "Generate AI-powered notes from YouTube lectures with NotesGen AI.",
-  icons: {
-    icon: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
-    other: [
-      {
-        rel: "icon",
-        type: "image/png",
-        sizes: "32x32",
-        url: "/favicon-32x32.png",
-      },
-      {
-        rel: "icon",
-        type: "image/png",
-        sizes: "16x16",
-        url: "/favicon-16x16.png",
-      },
-    ],
-  },
-};
 
 export default function RootLayout({
   children,
@@ -46,26 +25,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <AuthProvider>
-          <MainHeader />
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${geistSans.className} antialiased`}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
           {children}
-          <Footer />
-          <Toaster
-            position="top-right"
-            richColors
-            closeButton
-            expand={true}
-            toastOptions={{
-              style: {
-                marginTop: "60px", // Add space from top if you have a navbar
-              },
-            }}
-          />
-        </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
