@@ -32,7 +32,7 @@ export const useLogout = () => {
       });
 
       // Redirect to login
-      router.push("/login");
+      router.push("/auth/login");
     } catch (error) {
       console.error("Error logging out:", error);
 
