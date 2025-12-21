@@ -30,7 +30,8 @@ const NotesPage = () => {
       }
     : null;
 
-  const notes = savedNotes?.content || null;
+  let notes = savedNotes?.content || null;
+  notes = typeof notes === "string" ? JSON.parse(notes) : notes;
 
   return (
     <main className="min-h-[95vh] py-20 px-2 md:px-4 container mx-auto">
@@ -48,7 +49,6 @@ const NotesPage = () => {
           refetchVideo={() => {}} // No video refetch needed for saved notes
         />
       )}
-
       {!savedNotes && !notesLoading && !notesError && (
         <section className="text-center py-8 min-h-[95vh]">
           <h1 className="text-2xl font-bold mb-4">Notes not found</h1>
@@ -64,7 +64,6 @@ const NotesPage = () => {
           Invalid notes data
         </section>
       )}
-
       <Notes>
         <Notes.Head>
           <Notes.VideoHead

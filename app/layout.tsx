@@ -5,6 +5,7 @@ import MainHeader from "@/components/layouts/header";
 import Footer from "@/components/layouts/footer";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/contexts/authContext";
+import { Suspense } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -51,7 +52,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider>
+          <Suspense fallback={<div>Loading...</div>}>
           <MainHeader />
+          </Suspense>
           {children}
           <Footer />
           <Toaster
