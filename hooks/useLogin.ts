@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
-import supabase from "@/utils/supabase/client";
+import { supabase } from "@/lib/supabase/client";
 import { validateLoginForm } from "@/utils/validation";
 import { toast } from "sonner";
 

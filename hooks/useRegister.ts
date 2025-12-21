@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import supabase from "@/utils/supabase/client";
+import { supabase } from "@/lib/supabase/client";
 import { validateRegistrationForm } from "@/utils/validation";
 import { toast } from "sonner";
 

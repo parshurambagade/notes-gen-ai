@@ -1,6 +1,6 @@
 import { NotesData, SavedNote, VideoData } from "@/types";
 import { convertMarkdownToJson } from "@/utils/notes";
-import supabase from "@/utils/supabase/client";
+import { supabase } from "@/lib/supabase/client";
 
 export class NotesService {
   static async generateNotes(videoId: string): Promise<NotesData> {

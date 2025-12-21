@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import supabase from "@/utils/supabase/client";
+import { supabase } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import useSavedNotesStore from "@/stores/saved-notes-store";
 import useRecentlyGeneratedNotesStore from "@/stores/recently-generated-notes-store";
@@ -32,7 +32,7 @@ export const useLogout = () => {
       });
 
       // Redirect to login
-      router.push("/login");
+      router.push("/auth/login");
     } catch (error) {
       console.error("Error logging out:", error);
 

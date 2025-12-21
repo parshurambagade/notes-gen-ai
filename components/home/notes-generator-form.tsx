@@ -18,12 +18,12 @@ const NotesGeneratorForm: React.FC<NotesGeneratorFormProps> = ({
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col sm:flex-row items-center gap-2"
+      className="flex flex-col sm:flex-row w-full items-center gap-2"
       aria-label="YouTube video URL input form"
       role="form"
       autoComplete="off"
     >
-      <div className="w-full sm:flex-3/4">
+      <div className="!w-full !flex-1">
         <Input
           id="youtube-url"
           aria-label="Youtube video url"
@@ -44,7 +44,7 @@ const NotesGeneratorForm: React.FC<NotesGeneratorFormProps> = ({
       <Button
         type="submit"
         disabled={!isValidVideoId}
-        className="w-full sm:flex-1/4 cursor-pointer"
+        className="w-full sm:w-max cursor-pointer"
         aria-label="Generate notes from YouTube video"
       >
         Generate Notes

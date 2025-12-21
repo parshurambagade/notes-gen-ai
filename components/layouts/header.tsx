@@ -71,7 +71,7 @@ export default function MainHeader() {
             </div>
           </nav>
           {!user ? (
-            <Link href={"/login"} className="my-2 hidden md:flex">
+            <Link href={"/auth/login"} className="my-2 hidden md:flex">
               <Button variant={"outline"} className="cursor-pointer">
                 Log In
               </Button>
@@ -136,7 +136,7 @@ export default function MainHeader() {
             {/* Mobile Nav Links - Now with animated mobile nav items */}
             {!user ? (
               <Link
-                href={"/login"}
+                href={"/auth/login"}
                 className="mb-4 flex justify-center w-full md:hidden"
               >
                 <Button
