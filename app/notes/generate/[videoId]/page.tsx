@@ -12,13 +12,31 @@ import BackButton from "@/components/common/back-button";
 import { Suspense } from "react";
 
 const GenerateContent = () => {
-  const { videoId } = useParams();
+  const params = useParams();
+
+  // Normalize videoId - handle both array and string cases
+  const videoId = Array.isArray(params.videoId)
+    ? params.videoId[0]
+    : params.videoId;
+
+  // Validate videoId before proceeding
+  if (!videoId || typeof videoId !== "string" || videoId.trim().length !== 11) {
+    return (
+      <section className="text-center py-8 min-h-[95vh]">
+        <h1 className="text-2xl font-bold mb-4">Invalid Video ID</h1>
+        <p className="text-gray-600">
+          Please provide a valid YouTube video ID.
+        </p>
+      </section>
+    );
+  }
 
   const {
     videoData,
     loading: videoLoading,
     error: videoError,
     refetch: refetchVideo,
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   } = useVideoData(videoId);
 
   const {
@@ -26,7 +44,8 @@ const GenerateContent = () => {
     loading: notesLoading,
     error: notesError,
     refetch: refetchNotes,
-  } = useNotesGenerator(videoId as string, videoData);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  } = useNotesGenerator(videoId, videoData);
 
   // Show loading state
   if (notesLoading || videoLoading) {
