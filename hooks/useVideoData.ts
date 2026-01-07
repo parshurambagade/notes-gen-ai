@@ -6,7 +6,7 @@ export const useVideoData = (
   videoId: string | string[] | undefined
 ): UseVideoDataReturn => {
   const [videoData, setVideoData] = useState<VideoData | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const hasInitialized = useRef<string | null>(null);
 

@@ -152,6 +152,7 @@ export class NotesService {
     userId: string
   ): Promise<SavedNote | null> {
     try {
+      console.log("UserId and VideoId", userId, videoId);
       if (!videoId || !(videoId.trim().length === 11)) {
         throw new Error("Notes ID is required");
       }

@@ -10,7 +10,7 @@ export const useNotesGenerator = (
   videoData: VideoData | null
 ): UseNotesGeneratorProps => {
   const [notes, setNotes] = useState<NotesData | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const isGeneratingRef = useRef(false);
 
