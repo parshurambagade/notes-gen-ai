@@ -1,5 +1,17 @@
-import { Button } from "@/components/ui/button";
+import NotesGenerator from "@/components/notes/notes-generator";
 
 export default function Home() {
-  return <Button variant="destructive">Click me</Button>;
+  return (
+    <main className="flex flex-col gap-4 items-center justify-center min-h-[95vh] px-3 md:px-6 py-24 lg:py-48">
+      <div className="flex flex-col gap-2">
+        <h1 className="text-4xl leading-10 font-bold text-primary text-center">
+          NotesGen AI
+        </h1>
+        <p className="text-xl leading-6 font-normal text-center">
+          Generate Notes From YouTube Lectures
+        </p>
+      </div>
+      <NotesGenerator />
+    </main>
+  );
 }
