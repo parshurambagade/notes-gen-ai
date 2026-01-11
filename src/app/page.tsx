@@ -1,4 +1,4 @@
-import NotesGenerator from "@/components/notes/notes-generator";
+import NotesGeneratorForm from "@/components/notes/notes-generator-form";
 
 export default function Home() {
   return (
@@ -11,7 +11,9 @@ export default function Home() {
           Generate Notes From YouTube Lectures
         </p>
       </div>
-      <NotesGenerator />
+      <section aria-label="Notes generator" className="max-w-xl w-full">
+        <NotesGeneratorForm />
+      </section>
     </main>
   );
 }
