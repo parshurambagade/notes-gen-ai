@@ -3,7 +3,9 @@
 import { NotesService } from "@/services/notes.service";
 import { VideoService } from "@/services/video.service";
 import { useGlobalStore } from "@/stores/global-store";
-
+import generateNotesResponse from "@/mocks/generate-notes-response.json";
+import { Notes } from "@/types/notes.types";
+import { convertMarkdownToJson } from "@/lib/notes";
 const useGenerateNotes = () => {
   const {
     setError,
@@ -25,11 +27,16 @@ const useGenerateNotes = () => {
     try {
       setIsFetchingVideoData(true);
       setIsGenerating(true);
+      setError("");
       const videoData = await VideoService.getVideoDetails(videoId);
       setVideoData(videoData);
       setIsFetchingVideoData(false);
-      const notes = await NotesService.generateNotes(videoId);
-      setNotes(notes);
+
+      //   const notes = await NotesService.generateNotes(videoId);
+      //   setNotes(notes);
+      //  !  USING MOCK DATA TO AVOID API CALLS
+      const notes = generateNotesResponse?.notes;
+      setNotes(convertMarkdownToJson(notes) as Notes);
       setIsFetchingVideoData(false);
     } catch (error) {
       setError(
