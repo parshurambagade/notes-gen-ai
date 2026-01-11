@@ -1,22 +1,50 @@
 "use client";
 
-import { Activity, useState } from "react";
+import { Activity } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-
-interface NotesGeneratorFormProps {
-  onNavigate?: (videoId: string) => void;
-}
+import { useGlobalStore } from "@/stores/global-store";
+import {
+  extractYouTubeVideoId,
+  isValidYouTubeVideoId,
+  parseYouTubeUrl,
+} from "@/lib/youtube";
+import useGenerateNotes from "@/hooks/useGenerateNotes";
 
 const NotesGeneratorForm = () => {
-  const [url, setUrl] = useState(
-    "https://youtu.be/lsf060bLH_Y?si=WN_YYbuxcLwaRSHq"
-  );
+  const { url, setUrl, setError, setVideoId, error } = useGlobalStore();
+
+  const { isGenerating, generateNotes } = useGenerateNotes();
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const isValidUrl = parseYouTubeUrl(url);
+
+    if (!isValidUrl) {
+      setError("Please enter a valid YouTube URL");
+      return;
+    }
+
+    const extractedVideoId = extractYouTubeVideoId(url);
+
+    const isValidVideoId = isValidYouTubeVideoId(extractedVideoId);
+
+    if (!isValidVideoId) {
+      setError("Video ID is not valid. Please enter a valid YouTube URL");
+      return;
+    }
+
+    if (isValidVideoId) {
+      setVideoId(String(extractedVideoId));
+      generateNotes(String(extractedVideoId));
+    }
+  };
 
   return (
     <div>
       <form
-        onSubmit={() => {}}
+        onSubmit={handleSubmit}
         className="flex flex-col sm:flex-row w-full items-center gap-2"
         aria-label="YouTube video URL input form"
         autoComplete="off"
@@ -34,15 +62,16 @@ const NotesGeneratorForm = () => {
         </div>
         <Button
           type="submit"
-          // disabled={!isValidVideoId}
+          disabled={isGenerating}
           className="w-full sm:w-max cursor-pointer"
           aria-label="Generate notes from YouTube video"
         >
-          Generate Notes
+          {isGenerating ? "Generating..." : "Generate Notes"}
         </Button>
       </form>
 
-      <Activity mode={"hidden"}>
+      {/* ERROR MESSAGE */}
+      <Activity mode={error && error.length > 0 ? "visible" : "hidden"}>
         <span id="url-error" className="text-red-500 text-sm mt-1 block">
           Please enter a valid YouTube URL
         </span>
