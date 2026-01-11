@@ -5,7 +5,11 @@ import NotesBody from "./notes-body";
 const Notes = () => {
   const { videoData, notes } = useGlobalStore();
   return (
-    <section aria-label="Notes section" className=" min-h-[95vh]">
+    <section
+      id="generated-notes"
+      aria-label="Notes section"
+      className=" min-h-[95vh]"
+    >
       <div className="max-w-4xl mx-auto">
         {/* NOTES HEAD */}
         <NotesHead videoData={videoData} />
