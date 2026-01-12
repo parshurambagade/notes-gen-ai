@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { validateRegistrationForm } from "@/lib/validation";
 import { toast } from "sonner";
+import { createClient } from "@/lib/supabase/client";
 
 export const useRegister = () => {
   const [name, setName] = useState("");
@@ -14,6 +15,51 @@ export const useRegister = () => {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    try {
+      const supabase = await createClient();
+      const { isValid, error: validationError } = validateRegistrationForm(
+        name,
+        email,
+        password
+      );
+
+      if (!isValid) {
+        setError(validationError || null);
+        return;
+      }
+
+      setIsLoading(true);
+      const { data, error: supabaseError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            name,
+          },
+        },
+      });
+
+      if (supabaseError) {
+        setError(supabaseError.message || null);
+        setIsLoading(false);
+        return;
+      }
+
+      if (data.user) {
+        toast.success("Account created successfully");
+        router.push("/");
+      }
+    } catch (error) {
+      toast.error("An error occurred while creating your account");
+      setError(
+        error instanceof Error ? error.message : "An unknown error occurred"
+      );
+      setIsLoading(false);
+      return;
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

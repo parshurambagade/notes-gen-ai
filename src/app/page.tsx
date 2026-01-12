@@ -39,7 +39,13 @@ const Home = () => {
           <NotesLoading videoData={videoData || undefined} />
         </Activity>
         <Activity
-          mode={notes && Object.keys(notes).length > 0 ? "visible" : "hidden"}
+          mode={
+            notes &&
+            Object.keys(notes).length > 0 &&
+            (!isFetchingVideoData || !isGenerating)
+              ? "visible"
+              : "hidden"
+          }
         >
           <Notes />
         </Activity>

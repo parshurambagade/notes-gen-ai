@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/auth-context";
+import useLogout from "@/hooks/useLogout";
 
 // Navigation items
 const navigationItems = [
@@ -26,6 +27,8 @@ export default function MainHeader() {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user } = useAuth();
+
+  const { handleLogout, isLoading: isLoggingOut } = useLogout();
   // Close mobile menu when path changes
 
   return (
@@ -90,18 +93,17 @@ export default function MainHeader() {
                 <DropdownMenuContent>
                   <DropdownMenuItem
                     className="cursor-pointer flex justify-center items-center gap-2"
-                    // onClick={() => onLogout()}
-                    // disabled={isLoggingOut}
-                    // onKeyDown={(e) => {
-                    //   if (e.key === "Enter" || e.key === " ") {
-                    //     e.preventDefault();
-                    //     onLogout();
-                    //   }
-                    // }}
+                    onClick={() => handleLogout()}
+                    disabled={isLoggingOut}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        handleLogout();
+                      }
+                    }}
                   >
                     <LogOut className="h-4 w-4" />
-                    {/* {isLoggingOut ? "Logging out..." : "Logout"} */}
-                    Logout
+                    {isLoggingOut ? "Logging out..." : "Logout"}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -162,11 +164,11 @@ export default function MainHeader() {
                 <Button
                   variant="outline"
                   className="cursor-pointer flex w-max justify-center items-center gap-2"
-                  //   onClick={() => onLogout()}
-                  //   disabled={isLoggingOut}
+                  onClick={() => handleLogout()}
+                  disabled={isLoggingOut}
                 >
                   <LogOut className="h-4 w-4" />
-                  {/* {isLoggingOut ? "Logging out..." : "Logout"} */}
+                  {isLoggingOut ? "Logging out..." : "Logout"}
                   Logout
                 </Button>
               </div>
