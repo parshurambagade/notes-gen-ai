@@ -22,7 +22,6 @@ const navigationItems = [
   { name: "Home", href: "/" },
   { name: "All Notes", href: "/notes/all" },
 ];
-
 export default function MainHeader() {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);

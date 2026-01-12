@@ -1,11 +1,13 @@
 import { createClient } from "@/lib/supabase/client";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "sonner";
 
 const useLogout = () => {
   const supabase = createClient();
   const [isLoading, setIsLoading] = useState(false);
+
+  const router = useRouter();
 
   const handleLogout = async () => {
     try {
@@ -15,7 +17,7 @@ const useLogout = () => {
         toast.error(error.message);
       } else {
         toast.success("Logged out successfully");
-        redirect("/auth/login");
+        router.replace("/auth/login");
       }
     } catch (error) {
       toast.error(

@@ -48,7 +48,7 @@ export const useRegister = () => {
 
       if (data.user) {
         toast.success("Account created successfully");
-        router.push("/");
+        router.replace("/");
       }
     } catch (error) {
       toast.error("An error occurred while creating your account");
