@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/client";
+import { useGlobalStore } from "@/stores/global-store";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "sonner";
@@ -6,6 +7,8 @@ import { toast } from "sonner";
 const useLogout = () => {
   const supabase = createClient();
   const [isLoading, setIsLoading] = useState(false);
+
+  const { clearStore } = useGlobalStore();
 
   const router = useRouter();
 
@@ -17,6 +20,7 @@ const useLogout = () => {
         toast.error(error.message);
       } else {
         toast.success("Logged out successfully");
+        clearStore();
         router.replace("/auth/login");
       }
     } catch (error) {

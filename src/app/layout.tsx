@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import MainHeader from "@/components/layouts/header";
 import { AuthProviderWrapper } from "@/components/providers/auth-provider-wrapper";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,6 +33,7 @@ export default function RootLayout({
         <AuthProviderWrapper>
           <MainHeader />
           {children}
+          <Toaster position="top-right" richColors  theme="light" />
         </AuthProviderWrapper>
       </body>
     </html>

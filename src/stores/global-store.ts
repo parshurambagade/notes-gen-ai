@@ -24,6 +24,7 @@ export const useGlobalStore = create<GlobalStore>()(
       setIsGenerating: (isGenerating: boolean) => set({ isGenerating }),
       setIsFetchingVideoData: (isFetchingVideoData: boolean) =>
         set({ isFetchingVideoData }),
+      clearStore: () => set(initialState),
     }),
     { name: "global-store" }
   )

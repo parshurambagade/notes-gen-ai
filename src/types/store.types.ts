@@ -19,6 +19,7 @@ export interface GlobalActions {
   setError: (error: string) => void;
   setIsGenerating: (isGenerating: boolean) => void;
   setIsFetchingVideoData: (isFetchingVideoData: boolean) => void;
+  clearStore: () => void;
 }
 
 export interface GlobalStore extends GlobalState, GlobalActions {}

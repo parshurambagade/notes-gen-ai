@@ -77,7 +77,7 @@ export default function MainHeader() {
           ) : (
             <div className="hidden md:flex">
               <DropdownMenu>
-                <DropdownMenuTrigger className="flex gap-2 items-center my-3 min-w-max">
+                <DropdownMenuTrigger className="flex gap-2 items-center my-3 min-w-max cursor-pointer">
                   <Avatar>
                     <AvatarImage
                       src="https://github.com/shadcn.png"
