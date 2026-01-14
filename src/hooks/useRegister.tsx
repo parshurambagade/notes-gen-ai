@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import { validateRegistrationForm } from "@/lib/validation";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
+import { useUserStore } from "@/stores/user-store";
 
 export const useRegister = () => {
   const [name, setName] = useState("");
@@ -10,6 +11,8 @@ export const useRegister = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const { setUser, setUserCredits, setLastReset } = useUserStore();
 
   const router = useRouter();
 
@@ -46,7 +49,28 @@ export const useRegister = () => {
         return;
       }
 
+      const today = new Date().toISOString().slice(0, 10);
+
+      const { data: creditsData, error: creditsError } = await supabase
+        .from("user_credits")
+        .insert({
+          user_id: data.user?.id,
+          credits: 5,
+          last_reset: today,
+        });
+
+      if (creditsError) {
+        toast.error(
+          creditsError.message || "An error occurred while adding credits"
+        );
+        setIsLoading(false);
+        return;
+      }
+
       if (data.user) {
+        setUser(data.user);
+        setUserCredits(5);
+        setLastReset(today);
         toast.success("Account created successfully");
         router.replace("/");
       }

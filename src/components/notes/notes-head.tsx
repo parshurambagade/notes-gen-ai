@@ -5,7 +5,7 @@ import { Button } from "../ui/button";
 
 const NotesHead = ({ videoData }: { videoData: VideoData | null }) => {
   if (!videoData) return null;
-
+ 
   return (
     <div className="overflow-hidden py-0 gap-0 rounded-b-none border-b-0 border rounded-t-xl">
       {/* VIDEO HEAD */}
