@@ -13,8 +13,6 @@ const useNotes = () => {
   const supabase = createClient();
   const { user } = useAuth();
 
-  console.log("Open Replace Notes Alert", openReplaceNotesAlert);
-
   const handleSaveNotes = async (notes: Notes | null) => {
     try {
       // check if notes are valid
@@ -78,6 +76,30 @@ const useNotes = () => {
       setError(null);
     }
   };
+
+  const getAllSavedNotes = async () => {
+   try{
+    const { data: savedNotes, error: savedNotesError } = await supabase
+      .from("notes")
+      .select("*")
+      .eq("user_id", user?.id);
+
+    if (savedNotesError) {
+      setError(savedNotesError.message);
+      toast.error(savedNotesError.message);
+      return;
+    }
+
+    if (savedNotes && savedNotes?.length > 0) {
+      return savedNotes;
+    }
+   }catch(error){
+    console.error(error);
+    toast.error("An error occurred while getting all saved notes");
+    return;
+   }
+  };
+
   return {
     handleSaveNotes,
     isSaving,
@@ -85,6 +107,7 @@ const useNotes = () => {
     openReplaceNotesAlert,
     setOpenReplaceNotesAlert,
     notes,
+    getAllSavedNotes,
   };
 };
 

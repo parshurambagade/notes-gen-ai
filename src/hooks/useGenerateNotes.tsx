@@ -10,6 +10,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/contexts/auth-context";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { VideoData } from "@/types/video.types";
 const useGenerateNotes = () => {
   const supabase = createClient();
   const { user } = useAuth();
@@ -50,10 +51,29 @@ const useGenerateNotes = () => {
       }
 
       if (savedNotes && savedNotes?.length > 0) {
-        toast.error("Notes already saved for this video");
+        toast.error(
+          "Notes already saved for this video. Redirecting to notes page..."
+        );
         setIsGenerating(false);
         setIsFetchingVideoData(false);
-        router.push(`/notes/${videoId}`);
+        const notes: Notes = {
+          summary: JSON.parse(savedNotes[0]?.content)?.summary,
+          keyPoints: JSON.parse(savedNotes[0]?.content)?.keyPoints,
+          sections: JSON.parse(savedNotes[0]?.content)?.sections,
+        };
+        setNotes(notes);
+        const videoData: VideoData = {
+          title: savedNotes[0].video_title,
+          videoId: savedNotes[0].video_id,
+          duration: savedNotes[0].video_duration,
+          channel: savedNotes[0].video_channel,
+          thumbnailUrl: savedNotes[0].video_thumbnail_url,
+        };
+        setVideoData(videoData);
+        setTimeout(() => {
+          router.push(`/notes/${videoId}`);
+        }, 2500);
+
         return;
       }
 
