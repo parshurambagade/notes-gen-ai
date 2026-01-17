@@ -1,14 +1,12 @@
 "use client";
 
 import NotesCard from '@/components/notes/notes-card'
-import useNotes from '@/hooks/useNotes';
+import useAllNotes from '@/hooks/useAllNotes';
 import { SavedNote } from '@/types/notes.types';
-import React, { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 const AllNotes = () => {
-    const [allSavedNotes, setAllSavedNotes] = useState<SavedNote[]>([]);
-    
-    const { getAllSavedNotes } = useNotes();
+    const { allSavedNotes, setAllSavedNotes, getAllSavedNotes, error, isPending } = useAllNotes();
 
     useEffect(() => {
         getAllSavedNotes().then((notes: SavedNote[] | undefined) => {
@@ -16,15 +14,13 @@ const AllNotes = () => {
         });
     }, []);
 
-    if(allSavedNotes.length === 0) {
-        return <div>No notes found</div>
-    }
-
   return (
-    <main className='min-h-screen py-12 lg:py-24'>
+    <main className='min-h-screen py-12 lg:py-24 container mx-auto'>
          <section className="w-full mt-6">
+          {isPending && <div>Loading...</div>}
+          {error && <div>Error: {error}</div>}
           <ul className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {allSavedNotes.map((notes) => (
+            {allSavedNotes && allSavedNotes.length > 0 && allSavedNotes.map((notes) => (
               <li key={notes.id} className="w-full">
                 <NotesCard notes={notes} />
               </li>

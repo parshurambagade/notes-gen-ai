@@ -7,7 +7,7 @@ import useNotes from "@/hooks/useNotes";
 
 const NotesHead = ({ videoData }: { videoData: VideoData | null }) => {
   const { user } = useAuth();
-  const { handleSaveNotes, isSaving, notes } = useNotes();
+  const { handleSaveNotes, isPending, notes } = useNotes();
   if (!videoData) return null;
 
   return (
@@ -36,10 +36,10 @@ const NotesHead = ({ videoData }: { videoData: VideoData | null }) => {
               <Button
                 aria-label="Save Notes"
                 onClick={() => handleSaveNotes(notes)}
-                disabled={!user || isSaving}
+                disabled={!user || isPending}
                 className={
                   "flex text-base cursor-pointer gap-2" +
-                  (isSaving ? "opacity-50 cursor-not-allowed" : "")
+                  (isPending ? "opacity-50 cursor-not-allowed" : "")
                 }
               >
                 <Save className="w-3 md:w-4 h-3 md:h-4" />

@@ -1,21 +1,21 @@
 import { useAuth } from "@/contexts/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import { useGlobalStore } from "@/stores/global-store";
-import { Notes } from "@/types/notes.types";
-import React, { useState } from "react";
+import { Notes, SavedNote } from "@/types/notes.types";
+import { useState } from "react";
 import { toast } from "sonner";
 
 const useNotes = () => {
   const { notes, videoId, videoData } = useGlobalStore();
-  const [isSaving, setIsSaving] = useState(false);
+  const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [openReplaceNotesAlert, setOpenReplaceNotesAlert] = useState(false);
   const supabase = createClient();
   const { user } = useAuth();
 
   const handleSaveNotes = async (notes: Notes | null) => {
+    setIsPending(true);
     try {
-      // check if notes are valid
       if (!notes) {
         setError("Notes are not valid");
         return;
@@ -60,7 +60,7 @@ const useNotes = () => {
       if (newSavedNotes) {
         toast.success("Notes saved successfully");
         setOpenReplaceNotesAlert(false);
-        setIsSaving(false);
+        setIsPending(false);
         return;
       }
     } catch (error) {
@@ -69,45 +69,52 @@ const useNotes = () => {
       setError(
         error instanceof Error ? error.message : "An unknown error occurred"
       );
-      setIsSaving(false);
+      setIsPending(false);
       return;
     } finally {
-      setIsSaving(false);
+      setIsPending(false);
       setError(null);
     }
   };
 
-  const getAllSavedNotes = async () => {
+  const getNotes = async (videoId: string): Promise<SavedNote | undefined> => {
+   setIsPending(true);
    try{
-    const { data: savedNotes, error: savedNotesError } = await supabase
-      .from("notes")
-      .select("*")
-      .eq("user_id", user?.id);
+    const { data: notes, error: notesError } = await supabase
+    .from("notes")
+    .select("*")
+    .eq("user_id", user?.id)
+    .eq("video_id", videoId);
 
-    if (savedNotesError) {
-      setError(savedNotesError.message);
-      toast.error(savedNotesError.message);
+    if (notesError) {
+      setError(notesError.message);
+      toast.error(notesError.message);
       return;
     }
 
-    if (savedNotes && savedNotes?.length > 0) {
-      return savedNotes;
+    if (notes && notes?.length > 0) {
+      return notes[0] as SavedNote;
     }
+
    }catch(error){
     console.error(error);
-    toast.error("An error occurred while getting all saved notes");
+    toast.error("An error occurred while getting notes");
+    setError(error instanceof Error ? error.message : "An unknown error occurred");
+    setIsPending(false);
     return;
+   }finally{
+    setIsPending(false);
    }
   };
 
   return {
     handleSaveNotes,
-    isSaving,
+    isPending,
     error,
+    getNotes,
     openReplaceNotesAlert,
     setOpenReplaceNotesAlert,
     notes,
-    getAllSavedNotes,
   };
 };
 

@@ -50,7 +50,7 @@ const Home = () => {
               : "hidden"
           }
         >
-          <Notes />
+          <Notes notes={notes } videoData={videoData || null} />
         </Activity>
       </section>
       <ReplaceNotesAlert

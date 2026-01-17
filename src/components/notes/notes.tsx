@@ -1,9 +1,12 @@
-import { useGlobalStore } from "@/stores/global-store";
 import NotesHead from "./notes-head";
 import NotesBody from "./notes-body";
+import type { Notes } from "@/types/notes.types";
+import { VideoData } from "@/types/video.types";
 
-const Notes = () => {
-  const { videoData, notes } = useGlobalStore();
+const Notes = ({ notes, videoData }: { notes: Notes | null, videoData: VideoData | null }) => {
+
+  if(!notes || !videoData) return null;
+
   return (
     <section
       id="generated-notes"
