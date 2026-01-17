@@ -2,10 +2,14 @@ import { YOUTUBE_EMBED_URL } from "@/constants";
 import { VideoData } from "@/types/video.types";
 import { BookOpen, Clock, Save } from "lucide-react";
 import { Button } from "../ui/button";
+import { useAuth } from "@/contexts/auth-context";
+import useNotes from "@/hooks/useNotes";
 
 const NotesHead = ({ videoData }: { videoData: VideoData | null }) => {
+  const { user } = useAuth();
+  const { handleSaveNotes, isSaving, notes } = useNotes();
   if (!videoData) return null;
- 
+
   return (
     <div className="overflow-hidden py-0 gap-0 rounded-b-none border-b-0 border rounded-t-xl">
       {/* VIDEO HEAD */}
@@ -31,12 +35,11 @@ const NotesHead = ({ videoData }: { videoData: VideoData | null }) => {
             <div className="flex w-full sm:w-max justify-end sm:justify-normal items-center gap-2">
               <Button
                 aria-label="Save Notes"
-                // onClick={handleSave}
-                // disabled={isSaving || isSaved}
+                onClick={() => handleSaveNotes(notes)}
+                disabled={!user || isSaving}
                 className={
-                  "flex text-base cursor-pointer gap-2"
-                  // +
-                  // (isSaved ? "bg-green-600 hover:bg-green-700" : "")
+                  "flex text-base cursor-pointer gap-2" +
+                  (isSaving ? "opacity-50 cursor-not-allowed" : "")
                 }
               >
                 <Save className="w-3 md:w-4 h-3 md:h-4" />

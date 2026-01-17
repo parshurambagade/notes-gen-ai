@@ -2,11 +2,14 @@
 
 import NotesGeneratorForm from "@/components/notes/notes-generator-form";
 import NotesLoading from "@/components/notes/notes-loading";
-import { Activity } from "react";
+import { Activity, useState } from "react";
 import Notes from "@/components/notes/notes";
 import { useGlobalStore } from "@/stores/global-store";
+import ReplaceNotesAlert from "@/components/notes/replace-notes-alert";
+import useNotes from "@/hooks/useNotes";
 
 const Home = () => {
+  const { openReplaceNotesAlert, setOpenReplaceNotesAlert } = useNotes();
   const { isFetchingVideoData, isGenerating, videoData, notes } =
     useGlobalStore();
 
@@ -50,6 +53,11 @@ const Home = () => {
           <Notes />
         </Activity>
       </section>
+      <ReplaceNotesAlert
+        open={openReplaceNotesAlert}
+        setOpen={setOpenReplaceNotesAlert}
+        onReplaceNotes={() => {}}
+      />
     </main>
   );
 };
