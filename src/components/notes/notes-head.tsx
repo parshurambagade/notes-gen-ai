@@ -4,10 +4,17 @@ import { BookOpen, Clock, Save } from "lucide-react";
 import { Button } from "../ui/button";
 import { useAuth } from "@/contexts/auth-context";
 import useNotes from "@/hooks/useNotes";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 const NotesHead = ({ videoData }: { videoData: VideoData | null }) => {
   const { user } = useAuth();
-  const { handleSaveNotes, isPending, notes } = useNotes();
+  const { handleSaveNotes, isPending, notes, handleDeleteNotes } = useNotes();
+
+  const pathname = usePathname();
+
+  const isSaved = pathname === `/notes/${videoData?.videoId}`;
+
   if (!videoData) return null;
 
   return (
@@ -34,16 +41,17 @@ const NotesHead = ({ videoData }: { videoData: VideoData | null }) => {
             {/* NOTES HEAD BUTTONS  */}
             <div className="flex w-full sm:w-max justify-end sm:justify-normal items-center gap-2">
               <Button
-                aria-label="Save Notes"
-                onClick={() => handleSaveNotes(notes)}
+                aria-label={isSaved ? "Delete Notes" : "Save Notes"}
+                onClick={() => isSaved ? handleDeleteNotes(videoData?.videoId) : handleSaveNotes(notes)}
                 disabled={!user || isPending}
-                className={
-                  "flex text-base cursor-pointer gap-2" +
+                className={cn(
+                  "flex text-base cursor-pointer gap-2",
                   (isPending ? "opacity-50 cursor-not-allowed" : "")
-                }
+                  ,(isSaved ? "bg-red-500! hover:bg-red-600" : "bg-blue-500 hover:bg-blue-600")
+  )}
               >
                 <Save className="w-3 md:w-4 h-3 md:h-4" />
-                <span className="hidden md:inline">Save Notes</span>
+                <span className="hidden md:inline">{isSaved ? "Delete Notes" : "Save Notes"}</span>
               </Button>
             </div>
           </div>

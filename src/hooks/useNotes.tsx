@@ -2,6 +2,7 @@ import { useAuth } from "@/contexts/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import { useGlobalStore } from "@/stores/global-store";
 import { Notes, SavedNote } from "@/types/notes.types";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -12,6 +13,8 @@ const useNotes = () => {
   const [openReplaceNotesAlert, setOpenReplaceNotesAlert] = useState(false);
   const supabase = createClient();
   const { user } = useAuth();
+
+  const router = useRouter();
 
   const handleSaveNotes = async (notes: Notes | null) => {
     setIsPending(true);
@@ -35,7 +38,11 @@ const useNotes = () => {
       }
 
       if (savedNotes && savedNotes?.length > 0) {
-        setOpenReplaceNotesAlert(true);
+        toast.error("Notes already saved, redirecting to notes page...");
+        setIsPending(false);
+        setTimeout(() => {
+          router.push(`/notes/${videoData?.videoId}`);
+        }, 2500);
         return;
       }
       // save notes to database
@@ -43,13 +50,13 @@ const useNotes = () => {
         .from("notes")
         .insert({
           user_id: user?.id,
-          video_id: videoId,
+          video_id: videoData?.videoId,
           video_title: videoData?.title,
           video_channel: videoData?.channel,
           video_duration: videoData?.duration,
           video_thumbnail_url: videoData?.thumbnailUrl,
           content: notes,
-        });
+        }).select("*");
 
       if (newSavedNotesError) {
         setError(newSavedNotesError.message);
@@ -59,8 +66,8 @@ const useNotes = () => {
 
       if (newSavedNotes) {
         toast.success("Notes saved successfully");
-        setOpenReplaceNotesAlert(false);
         setIsPending(false);
+        router.push(`/notes/${videoData?.videoId}`);
         return;
       }
     } catch (error) {
@@ -78,39 +85,73 @@ const useNotes = () => {
   };
 
   const getNotes = async (videoId: string): Promise<SavedNote | undefined> => {
-   setIsPending(true);
-   try{
-    const { data: notes, error: notesError } = await supabase
-    .from("notes")
-    .select("*")
-    .eq("user_id", user?.id)
-    .eq("video_id", videoId);
+    setIsPending(true);
+    try {
+      const { data: notes, error: notesError } = await supabase
+        .from("notes")
+        .select("*")
+        .eq("user_id", user?.id)
+        .eq("video_id", videoId);
 
-    if (notesError) {
-      setError(notesError.message);
-      toast.error(notesError.message);
+      if (notesError) {
+        setError(notesError.message);
+        toast.error(notesError.message);
+        return;
+      }
+
+      if (notes && notes?.length > 0) {
+        return notes[0] as SavedNote;
+      }
+
+    } catch (error) {
+      console.error(error);
+      toast.error("An error occurred while getting notes");
+      setError(error instanceof Error ? error.message : "An unknown error occurred");
+      setIsPending(false);
       return;
+    } finally {
+      setIsPending(false);
     }
-
-    if (notes && notes?.length > 0) {
-      return notes[0] as SavedNote;
-    }
-
-   }catch(error){
-    console.error(error);
-    toast.error("An error occurred while getting notes");
-    setError(error instanceof Error ? error.message : "An unknown error occurred");
-    setIsPending(false);
-    return;
-   }finally{
-    setIsPending(false);
-   }
   };
 
+  const handleDeleteNotes = async (videoId: string) => {
+    setIsPending(true);
+    try {
+      const { error: notesError } = await supabase
+        .from("notes")
+        .delete()
+        .eq("user_id", user?.id)
+        .eq("video_id", videoId)
+        .select();
+
+      if (notesError) {
+        setError(notesError.message);
+        toast.error(notesError.message);
+        return;
+      }
+
+      toast.success("Notes deleted successfully");
+      setIsPending(false);
+      setTimeout(() => {
+        router.push(`/`);
+      }, 2500);
+      return;
+
+    } catch (error) {
+      console.error(error);
+      toast.error("An error occurred while deleting notes");
+      setError(error instanceof Error ? error.message : "An unknown error occurred");
+      setIsPending(false);
+      return;
+    } finally {
+      setIsPending(false);
+    }
+  };
   return {
     handleSaveNotes,
     isPending,
     error,
+    handleDeleteNotes,
     getNotes,
     openReplaceNotesAlert,
     setOpenReplaceNotesAlert,
