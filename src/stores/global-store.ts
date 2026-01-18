@@ -7,6 +7,7 @@ const initialState: GlobalState = {
   videoId: "",
   notes: null,
   videoData: null,
+  showLoginPopup: false,
   error: "",
   isGenerating: false,
   isFetchingVideoData: false,
@@ -24,6 +25,7 @@ export const useGlobalStore = create<GlobalStore>()(
       setIsGenerating: (isGenerating: boolean) => set({ isGenerating }),
       setIsFetchingVideoData: (isFetchingVideoData: boolean) =>
         set({ isFetchingVideoData }),
+      setShowLoginPopup: (showLoginPopup: boolean) => set({ showLoginPopup }),
       clearStore: () => set(initialState),
     }),
     { name: "global-store" }

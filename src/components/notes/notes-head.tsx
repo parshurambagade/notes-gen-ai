@@ -1,16 +1,17 @@
 import { YOUTUBE_EMBED_URL } from "@/constants";
 import { VideoData } from "@/types/video.types";
-import { BookOpen, Clock, Save } from "lucide-react";
+import { BookOpen, Clock, Save, Trash } from "lucide-react";
 import { Button } from "../ui/button";
 import { useAuth } from "@/contexts/auth-context";
 import useNotes from "@/hooks/useNotes";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { useGlobalStore } from "@/stores/global-store";
 
 const NotesHead = ({ videoData }: { videoData: VideoData | null }) => {
   const { user } = useAuth();
   const { handleSaveNotes, isPending, notes, handleDeleteNotes } = useNotes();
-
+  const { setShowLoginPopup } = useGlobalStore();
   const pathname = usePathname();
 
   const isSaved = pathname === `/notes/${videoData?.videoId}`;
@@ -40,19 +41,50 @@ const NotesHead = ({ videoData }: { videoData: VideoData | null }) => {
           <div className="flex">
             {/* NOTES HEAD BUTTONS  */}
             <div className="flex w-full sm:w-max justify-end sm:justify-normal items-center gap-2">
-              <Button
-                aria-label={isSaved ? "Delete Notes" : "Save Notes"}
-                onClick={() => isSaved ? handleDeleteNotes(videoData?.videoId) : handleSaveNotes(notes)}
-                disabled={!user || isPending}
+              {!isSaved ? <Button
+                aria-label={"Save Notes"}
+                onClick={() => {
+                  if (!user) {
+                    setShowLoginPopup(true);
+                    return;
+                  } else {
+
+                    handleSaveNotes(notes);
+
+                  }
+                }}
+                disabled={isPending}
                 className={cn(
                   "flex text-base cursor-pointer gap-2",
                   (isPending ? "opacity-50 cursor-not-allowed" : "")
-                  ,(isSaved ? "bg-red-500! hover:bg-red-600" : "bg-blue-500 hover:bg-blue-600")
-  )}
+                  , "bg-blue-500 hover:bg-blue-600"
+                )}
               >
                 <Save className="w-3 md:w-4 h-3 md:h-4" />
-                <span className="hidden md:inline">{isSaved ? "Delete Notes" : "Save Notes"}</span>
-              </Button>
+                <span className="hidden md:inline">{isPending ? "Saving..." : "Save Notes"}</span>
+              </Button> :
+                <Button
+                  aria-label={"Delete Notes"}
+                  onClick={() => {
+                    if (!user) {
+                      setShowLoginPopup(true);
+                      return;
+                    } else {
+                      if (isSaved) {
+                        handleDeleteNotes(videoData?.videoId);
+                      }
+                    }
+                  }}
+                  disabled={isPending}
+                  className={cn(
+                    "flex text-base cursor-pointer gap-2",
+                    (isPending ? "opacity-50 cursor-not-allowed" : "")
+                    , "bg-red-500! hover:bg-red-600"
+                  )}
+                >
+                  <Trash className="w-3 md:w-4 h-3 md:h-4" />
+                  <span className="hidden md:inline">{isPending ? "Deleting..." : "Delete Notes"}</span>
+                </Button>}
             </div>
           </div>
         </div>

@@ -133,8 +133,8 @@ const useNotes = () => {
       toast.success("Notes deleted successfully");
       setIsPending(false);
       setTimeout(() => {
-        router.push(`/`);
-      }, 2500);
+        router.push(`/notes/all`);
+      }, 1000);
       return;
 
     } catch (error) {

@@ -7,10 +7,11 @@ import Notes from "@/components/notes/notes";
 import { useGlobalStore } from "@/stores/global-store";
 import ReplaceNotesAlert from "@/components/notes/replace-notes-alert";
 import useNotes from "@/hooks/useNotes";
+import { LoginRequiredPopup } from "@/components/popups/login-required";
 
 const Home = () => {
   const { openReplaceNotesAlert, setOpenReplaceNotesAlert } = useNotes();
-  const { isFetchingVideoData, isGenerating, videoData, notes } =
+  const { isFetchingVideoData, isGenerating, videoData, notes, showLoginPopup, setShowLoginPopup } =
     useGlobalStore();
 
   return (
@@ -57,6 +58,10 @@ const Home = () => {
         open={openReplaceNotesAlert}
         setOpen={setOpenReplaceNotesAlert}
         onReplaceNotes={() => {}}
+      />
+      <LoginRequiredPopup
+        open={showLoginPopup}
+        setOpen={setShowLoginPopup}
       />
     </main>
   );

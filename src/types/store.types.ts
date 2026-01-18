@@ -9,6 +9,7 @@ export interface GlobalState {
   error: string;
   isGenerating: boolean;
   isFetchingVideoData: boolean;
+  showLoginPopup: boolean;
 }
 
 export interface GlobalActions {
@@ -19,6 +20,7 @@ export interface GlobalActions {
   setError: (error: string) => void;
   setIsGenerating: (isGenerating: boolean) => void;
   setIsFetchingVideoData: (isFetchingVideoData: boolean) => void;
+  setShowLoginPopup: (showLoginPopup: boolean) => void;
   clearStore: () => void;
 }
 
