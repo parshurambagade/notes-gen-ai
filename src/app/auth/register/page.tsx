@@ -13,6 +13,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import { useRegister } from "@/hooks/useRegister";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 
 const Register = () => {
   const router = useRouter();
@@ -27,8 +29,15 @@ const Register = () => {
   } = useRegister();
 
   return (
-    <main className="py-20 md:py-40 min-h-[95vh] flex items-center md:items-start justify-center px-2 md:px-8">
-      <Card className="w-full max-w-sm">
+    <main className="min-h-screen pt-24 md:pt-28 pb-20 flex items-start justify-center px-4 md:px-8">
+      <div className="w-full max-w-sm">
+        <Button variant="ghost" asChild className="mb-4">
+          <Link href="/" className="flex items-center gap-2">
+            <ArrowLeft className="h-4 w-4" />
+            Back to home
+          </Link>
+        </Button>
+        <Card className="w-full">
         <CardHeader>
           <CardTitle>Create an account</CardTitle>
           <CardDescription>
@@ -102,6 +111,7 @@ const Register = () => {
           </form>
         </CardContent>
       </Card>
+      </div>
     </main>
   );
 };

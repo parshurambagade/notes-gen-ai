@@ -30,10 +30,12 @@ const useAllNotes = () => {
          if (savedNotesError) {
            setError(savedNotesError.message);
            toast.error(savedNotesError.message);
+           setIsPending(false);
            return;
          }
      
          if (savedNotes && savedNotes?.length > 0) {
+          setIsPending(false);
            return savedNotes;
          }
         }catch(error){

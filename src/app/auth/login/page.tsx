@@ -16,6 +16,7 @@ import Link from "next/link";
 import { useLogin } from "@/hooks/useLogin";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
+import { ArrowLeft } from "lucide-react";
 
 function LoginForm() {
   const searchParams = useSearchParams();
@@ -43,8 +44,15 @@ function LoginForm() {
   }, [message]);
 
   return (
-    <main className="py-20 md:py-40 min-h-[95vh] flex items-center md:items-start justify-center px-2 md:px-8">
-      <Card className="w-full max-w-sm">
+    <main className="min-h-screen pt-24 md:pt-28 pb-20 flex items-start justify-center px-4 md:px-8">
+      <div className="w-full max-w-sm">
+        <Button variant="ghost" asChild className="mb-4">
+          <Link href="/" className="flex items-center gap-2">
+            <ArrowLeft className="h-4 w-4" />
+            Back to home
+          </Link>
+        </Button>
+        <Card className="w-full">
         <CardHeader>
           <CardTitle>Login to your account</CardTitle>
           <CardDescription>
@@ -111,6 +119,7 @@ function LoginForm() {
           </form>
         </CardContent>
       </Card>
+      </div>
     </main>
   );
 }

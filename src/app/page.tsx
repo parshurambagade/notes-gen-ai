@@ -2,7 +2,7 @@
 
 import NotesGeneratorForm from "@/components/notes/notes-generator-form";
 import NotesLoading from "@/components/notes/notes-loading";
-import { Activity, useState } from "react";
+import { Activity } from "react";
 import Notes from "@/components/notes/notes";
 import { useGlobalStore } from "@/stores/global-store";
 import ReplaceNotesAlert from "@/components/notes/replace-notes-alert";
@@ -15,28 +15,39 @@ const Home = () => {
     useGlobalStore();
 
   return (
-    <main className="flex flex-col gap-8 items-center justify-center min-h-[95vh] px-3 md:px-6 py-24 lg:py-48">
+    <main className="min-h-screen pt-24 md:pt-28 pb-20">
       <section
         aria-label="Hero section"
-        className="flex flex-col gap-4 items-center justify-center max-w-xl w-full"
+        className="container mx-auto px-4 md:px-6"
       >
-        <div className="flex flex-col gap-2">
-          <h1 className="text-4xl leading-10 font-bold text-primary text-center">
-            NotesGen AI
+        <div className="max-w-2xl mx-auto text-center space-y-3">
+          <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">
+            Notes from any lecture
+          </p>
+          <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-foreground">
+            Turn YouTube lectures into clear study notes
           </h1>
-          <p className="text-xl leading-6 font-normal text-center">
-            Generate Notes From YouTube Lectures
+          <p className="text-lg text-muted-foreground">
+            Paste a link, generate structured notes, and save them for later.
           </p>
         </div>
 
         {/* NOTES GENERATOR FORM */}
-        <section aria-label="Notes generator" className="max-w-xl w-full">
-          <NotesGeneratorForm />
+        <section
+          aria-label="Notes generator"
+          className="max-w-2xl w-full mx-auto mt-8"
+        >
+          <div className="rounded-2xl border bg-card shadow-sm p-4 md:p-6">
+            <NotesGeneratorForm />
+          </div>
         </section>
       </section>
 
       {/* GENERATED NOTES */}
-      <section aria-label="Generated Notes" className="max-w-4xl w-full">
+      <section
+        aria-label="Generated Notes"
+        className="container mx-auto px-4 md:px-6 mt-12"
+      >
         <Activity
           mode={isFetchingVideoData || isGenerating ? "visible" : "hidden"}
         >
@@ -51,7 +62,7 @@ const Home = () => {
               : "hidden"
           }
         >
-          <Notes notes={notes } videoData={videoData || null} />
+          <Notes notes={notes} videoData={videoData || null} />
         </Activity>
       </section>
       <ReplaceNotesAlert

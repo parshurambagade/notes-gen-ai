@@ -6,13 +6,33 @@
   export function formatRelativeTime(timestamp: string | Date): string {
     try {
       const now = new Date();
-      const past = new Date(timestamp);
+      let past: Date;
+      
+      if (timestamp instanceof Date) {
+        past = timestamp;
+      } else {
+        // Supabase returns timestamps in ISO format (UTC)
+        // Handle different timestamp formats that Supabase might return
+        const timestampStr = timestamp.trim();
+        
+        // If it's already a valid ISO string with timezone, parse directly
+        if (timestampStr.includes('Z') || timestampStr.match(/[+-]\d{2}:\d{2}$/)) {
+          past = new Date(timestampStr);
+        } else if (timestampStr.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/)) {
+          // ISO format without timezone - Supabase stores in UTC, so append 'Z'
+          past = new Date(timestampStr + 'Z');
+        } else {
+          // Try parsing as-is (fallback)
+          past = new Date(timestampStr);
+        }
+      }
   
       // Check if the date is valid
       if (isNaN(past.getTime())) {
+        console.error('Invalid timestamp:', timestamp);
         return "Invalid date";
       }
-  
+      
       const diffInMs = now.getTime() - past.getTime();
       const diffInSeconds = Math.floor(diffInMs / 1000);
       const diffInMinutes = Math.floor(diffInSeconds / 60);
@@ -22,7 +42,7 @@
       const diffInMonths = Math.floor(diffInDays / 30);
       const diffInYears = Math.floor(diffInDays / 365);
   
-      // Handle future dates
+      // Handle future dates (or very recent past that might be due to clock skew)
       if (diffInMs < 0) {
         return "Just now";
       }
@@ -74,7 +94,23 @@
    */
   export function formatAbsoluteTime(timestamp: string | Date): string {
     try {
-      const date = new Date(timestamp);
+      let date: Date;
+      
+      if (timestamp instanceof Date) {
+        date = timestamp;
+      } else {
+        // Handle timestamp parsing consistently with formatRelativeTime
+        const timestampStr = timestamp.trim();
+        
+        if (timestampStr.includes('Z') || timestampStr.match(/[+-]\d{2}:\d{2}$/)) {
+          date = new Date(timestampStr);
+        } else if (timestampStr.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/)) {
+          // ISO format without timezone - treat as UTC
+          date = new Date(timestampStr + 'Z');
+        } else {
+          date = new Date(timestampStr);
+        }
+      }
   
       if (isNaN(date.getTime())) {
         return "Invalid date";

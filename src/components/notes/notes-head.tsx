@@ -19,20 +19,20 @@ const NotesHead = ({ videoData }: { videoData: VideoData | null }) => {
   if (!videoData) return null;
 
   return (
-    <div className="overflow-hidden py-0 gap-0 rounded-b-none border-b-0 border rounded-t-xl">
+    <div className="overflow-hidden rounded-2xl border bg-card">
       {/* VIDEO HEAD */}
-      <div className="bg-white border-b border-gray-200 p-4">
-        <div className="flex fflex-row  gap-3 items-start md:items-center justify-between">
+      <div className="border-b border-border p-5 md:p-6">
+        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div className="w-full">
-            <h1 className="text-2xl font-bold text-gray-900 mb-2 line-clamp-2">
+            <h1 className="text-2xl md:text-3xl font-semibold text-foreground mb-2 line-clamp-2">
               {videoData?.title}
             </h1>
-            <div className="flex w-full sm:w-max justify-between sm:justify-normal items-center gap-4 text-sm text-gray-600">
-              <div className="flex items-center gap-1 ">
+            <div className="flex w-full sm:w-max justify-between sm:justify-normal items-center gap-4 text-sm text-muted-foreground">
+              <div className="flex items-center gap-1">
                 <Clock className="w-3 md:w-4 h-3 md:h-4" />
                 <span>{videoData?.duration}</span>
               </div>
-              <div className="flex items-center gap-1 ">
+              <div className="flex items-center gap-1">
                 <BookOpen className="w-3 md:w-4 h-3 md:h-4" />
                 <span>{videoData?.channel}</span>
               </div>
@@ -41,28 +41,28 @@ const NotesHead = ({ videoData }: { videoData: VideoData | null }) => {
           <div className="flex">
             {/* NOTES HEAD BUTTONS  */}
             <div className="flex w-full sm:w-max justify-end sm:justify-normal items-center gap-2">
-              {!isSaved ? <Button
-                aria-label={"Save Notes"}
-                onClick={() => {
-                  if (!user) {
-                    setShowLoginPopup(true);
-                    return;
-                  } else {
-
+              {!isSaved ? (
+                <Button
+                  aria-label={"Save Notes"}
+                  onClick={() => {
+                    if (!user) {
+                      setShowLoginPopup(true);
+                      return;
+                    }
                     handleSaveNotes(notes);
-
-                  }
-                }}
-                disabled={isPending}
-                className={cn(
-                  "flex text-base cursor-pointer gap-2",
-                  (isPending ? "opacity-50 cursor-not-allowed" : "")
-                  , "bg-blue-500 hover:bg-blue-600"
-                )}
-              >
-                <Save className="w-3 md:w-4 h-3 md:h-4" />
-                <span className="hidden md:inline">{isPending ? "Saving..." : "Save Notes"}</span>
-              </Button> :
+                  }}
+                  disabled={isPending}
+                  className={cn(
+                    "flex text-base cursor-pointer gap-2",
+                    isPending ? "opacity-50 cursor-not-allowed" : ""
+                  )}
+                >
+                  <Save className="w-3 md:w-4 h-3 md:h-4" />
+                  <span className="hidden md:inline">
+                    {isPending ? "Saving..." : "Save Notes"}
+                  </span>
+                </Button>
+              ) : (
                 <Button
                   aria-label={"Delete Notes"}
                   onClick={() => {
@@ -76,15 +76,18 @@ const NotesHead = ({ videoData }: { videoData: VideoData | null }) => {
                     }
                   }}
                   disabled={isPending}
+                  variant="destructive"
                   className={cn(
                     "flex text-base cursor-pointer gap-2",
-                    (isPending ? "opacity-50 cursor-not-allowed" : "")
-                    , "bg-red-500! hover:bg-red-600"
+                    isPending ? "opacity-50 cursor-not-allowed" : ""
                   )}
                 >
                   <Trash className="w-3 md:w-4 h-3 md:h-4" />
-                  <span className="hidden md:inline">{isPending ? "Deleting..." : "Delete Notes"}</span>
-                </Button>}
+                  <span className="hidden md:inline">
+                    {isPending ? "Deleting..." : "Delete Notes"}
+                  </span>
+                </Button>
+              )}
             </div>
           </div>
         </div>

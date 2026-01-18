@@ -11,9 +11,9 @@ const Notes = ({ notes, videoData }: { notes: Notes | null, videoData: VideoData
     <section
       id="generated-notes"
       aria-label="Notes section"
-      className=" min-h-[95vh]"
+      className="w-full"
     >
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-4xl mx-auto mt-6">
         {/* NOTES HEAD */}
         <NotesHead videoData={videoData} />
         {/* NOTES BODY */}
