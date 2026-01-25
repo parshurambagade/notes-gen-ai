@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useGlobalStore } from "@/stores/global-store";
 import { Notes, SavedNote } from "@/types/notes.types";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { toast } from "sonner";
 
 const useNotes = () => {
@@ -84,24 +84,48 @@ const useNotes = () => {
     }
   };
 
-  const getNotes = async (videoId: string): Promise<SavedNote | undefined> => {
+  const getNotes = useCallback(async (videoId: string): Promise<SavedNote | undefined> => {
+    // Don't proceed if user is not available
+    if (!user?.id) {
+      setError(null);
+      setIsPending(false);
+      return;
+    }
+
+    // Validate videoId
+    if (!videoId || typeof videoId !== "string") {
+      setError("Invalid video ID");
+      setIsPending(false);
+      return;
+    }
+
     setIsPending(true);
+    setError(null);
+    
     try {
       const { data: notes, error: notesError } = await supabase
         .from("notes")
         .select("*")
-        .eq("user_id", user?.id)
+        .eq("user_id", user.id)
         .eq("video_id", videoId);
 
       if (notesError) {
         setError(notesError.message);
         toast.error(notesError.message);
+        setIsPending(false);
         return;
       }
 
       if (notes && notes?.length > 0) {
+        setError(null);
+        setIsPending(false);
         return notes[0] as SavedNote;
       }
+
+      // No notes found
+      setError(null);
+      setIsPending(false);
+      return;
 
     } catch (error) {
       console.error(error);
@@ -109,10 +133,9 @@ const useNotes = () => {
       setError(error instanceof Error ? error.message : "An unknown error occurred");
       setIsPending(false);
       return;
-    } finally {
-      setIsPending(false);
     }
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id]);
 
   const handleDeleteNotes = async (videoId: string) => {
     setIsPending(true);
