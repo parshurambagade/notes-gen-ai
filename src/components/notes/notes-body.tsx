@@ -6,7 +6,7 @@ const NotesBody = ({ notes }: { notes: Notes | null }) => {
   if (!notes) return null;
 
   return (
-    <div className="border border-border rounded-2xl bg-card p-5 md:p-8 mt-6">
+    <div className="border border-border rounded-2xl bg-card p-5 md:p-8">
       {/* NOTES SUMMARY */}
       <Activity mode={notes?.summary ? "visible" : "hidden"}>
         <div className="mb-6">

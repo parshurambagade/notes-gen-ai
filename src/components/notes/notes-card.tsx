@@ -35,8 +35,8 @@ const NotesCard = ({ notes }: { notes: SavedNote }) => {
             className="w-full rounded-t-lg object-cover"
           />
         </CardHeader>
-        <CardContent className="px-4 pt-4">
-          <h3 className="text-base leading-6 font-semibold line-clamp-2 text-foreground group-hover:text-foreground">
+        <CardContent className="px-4 pt-0">
+          <h3 className="text-base leading-6 font-semibold  text-foreground group-hover:text-foreground text-ellipsis overflow-hidden line-clamp-1">
             {notes?.video_title || "Video Title Not Available"}
           </h3>
         </CardContent>

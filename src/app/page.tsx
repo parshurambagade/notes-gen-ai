@@ -57,7 +57,7 @@ const Home = () => {
           mode={
             notes &&
             Object.keys(notes).length > 0 &&
-            (!isFetchingVideoData || !isGenerating)
+            (!isFetchingVideoData && !isGenerating)
               ? "visible"
               : "hidden"
           }

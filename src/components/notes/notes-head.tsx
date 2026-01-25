@@ -1,6 +1,5 @@
-import { YOUTUBE_EMBED_URL } from "@/constants";
 import { VideoData } from "@/types/video.types";
-import { BookOpen, Clock, Save, Trash } from "lucide-react";
+import { BookOpen, Clock, Download, Save, Trash } from "lucide-react";
 import { Button } from "../ui/button";
 import { useAuth } from "@/contexts/auth-context";
 import useNotes from "@/hooks/useNotes";
@@ -40,7 +39,7 @@ const NotesHead = ({ videoData }: { videoData: VideoData | null }) => {
           </div>
           <div className="flex">
             {/* NOTES HEAD BUTTONS  */}
-            <div className="flex w-full sm:w-max justify-end sm:justify-normal items-center gap-2">
+            <div className="flex w-full sm:w-max justify-center sm:justify-normal items-center gap-2">
               {!isSaved ? (
                 <Button
                   aria-label={"Save Notes"}
@@ -53,12 +52,12 @@ const NotesHead = ({ videoData }: { videoData: VideoData | null }) => {
                   }}
                   disabled={isPending}
                   className={cn(
-                    "flex text-base cursor-pointer gap-2",
+                    "flex text-base cursor-pointer gap-2 flex-1 sm:w-max",
                     isPending ? "opacity-50 cursor-not-allowed" : ""
                   )}
                 >
                   <Save className="w-3 md:w-4 h-3 md:h-4" />
-                  <span className="hidden md:inline">
+                  <span className="inline text-sm">
                     {isPending ? "Saving..." : "Save Notes"}
                   </span>
                 </Button>
@@ -78,30 +77,35 @@ const NotesHead = ({ videoData }: { videoData: VideoData | null }) => {
                   disabled={isPending}
                   variant="destructive"
                   className={cn(
-                    "flex text-base cursor-pointer gap-2",
+                    "flex text-base cursor-pointer gap-2 flex-1 sm:w-max",
                     isPending ? "opacity-50 cursor-not-allowed" : ""
                   )}
                 >
                   <Trash className="w-3 md:w-4 h-3 md:h-4" />
-                  <span className="hidden md:inline">
+                  <span className="inline text-sm">
                     {isPending ? "Deleting..." : "Delete Notes"}
                   </span>
                 </Button>
               )}
+
+              {/* Download Notes Button */}
+              <Button
+                disabled={true}
+                aria-label={"Download Notes"}
+                onClick={() => {}}
+                className="flex-1 sm:w-max"
+              >
+                <Download className="w-3 md:w-4 h-3 md:h-4" />
+                <span className="inline text-sm">
+                  {/* {isPending ? "Downloading..." : "Download Notes"} */}
+                  Download Notes
+                </span>
+              </Button>
             </div>
           </div>
         </div>
       </div>
-      {/* VIDEO PLAYER */}
-      <div className="relative aspect-video">
-        <iframe
-          src={`${YOUTUBE_EMBED_URL}/${videoData?.videoId}`}
-          title={videoData?.title}
-          className="w-full h-full"
-          allowFullScreen
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        />
-      </div>
+
     </div>
   );
 };

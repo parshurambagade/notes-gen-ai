@@ -34,9 +34,9 @@ const NotesPage = () => {
   }, [videoId, videoData?.videoId, getNotes, setNotes, setVideoData]);
 
   return (
-    <main className="min-h-screen pt-24 md:pt-28 pb-20">
+    <main className="min-h-screen pt-16 md:pt-28 pb-20">
       <div className="container mx-auto px-4 md:px-6">
-        <div className="flex items-center justify-between mb-6">
+        <div className="hidden md:flex items-center justify-between mb-6">
           <Button variant="ghost" asChild>
             <Link href="/notes/all" className="flex items-center gap-2">
               <ArrowLeft className="h-4 w-4" />

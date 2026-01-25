@@ -1,5 +1,5 @@
 import { SavedNote } from '@/types/notes.types';
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { toast } from 'sonner';
 import { useAuth } from '@/contexts/auth-context';
 import { createClient } from '@/lib/supabase/client';
@@ -12,11 +12,10 @@ const useAllNotes = () => {
 
     const {user} = useAuth();
     
-    const getAllSavedNotes = async () => {
-
+    const getAllSavedNotes = useCallback(async () => {
+        // Don't set error if user is not available - let the component handle it
         if(!user?.id) {
-            setError("User not found");
-            toast.error("User not found");
+            setError(null);
             return;
         }
 
@@ -36,8 +35,14 @@ const useAllNotes = () => {
      
          if (savedNotes && savedNotes?.length > 0) {
           setIsPending(false);
+          setError(null);
            return savedNotes;
          }
+         
+         // No notes found, but that's not an error
+         setError(null);
+         setIsPending(false);
+         return [];
         }catch(error){
          console.error(error);
          toast.error("An error occurred while getting all saved notes");
@@ -45,7 +50,8 @@ const useAllNotes = () => {
         }finally{
             setIsPending(false);
         }
-       };
+       // eslint-disable-next-line react-hooks/exhaustive-deps
+       }, [user?.id]);
 
   return {
     allSavedNotes,

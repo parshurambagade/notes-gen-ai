@@ -39,55 +39,55 @@ const useGenerateNotes = () => {
       setError("");
 
       // check if notes are already saved
-     if(user?.id) {
-      const { data: savedNotes, error: savedNotesError } = await supabase
-      .from("notes")
-      .select("*")
-      .eq("user_id", user?.id)
-      .eq("video_id", videoId);
+      if (user?.id) {
+        const { data: savedNotes, error: savedNotesError } = await supabase
+          .from("notes")
+          .select("*")
+          .eq("user_id", user?.id)
+          .eq("video_id", videoId);
 
-    if (savedNotesError) {
-      setError(savedNotesError.message);
-      return;
-    }
+        if (savedNotesError) {
+          setError(savedNotesError.message);
+          return;
+        }
 
-    if (savedNotes && savedNotes?.length > 0) {
-      toast.error(
-        "Notes already saved for this video. Redirecting to notes page..."
-      );
-      setIsGenerating(false);
-      setIsFetchingVideoData(false);
-      const notes: Notes = {
-        summary: JSON.parse(savedNotes[0]?.content)?.summary,
-        keyPoints: JSON.parse(savedNotes[0]?.content)?.keyPoints,
-        sections: JSON.parse(savedNotes[0]?.content)?.sections,
-      };
-      setNotes(notes);
-      const videoData: VideoData = {
-        title: savedNotes[0].video_title,
-        videoId: savedNotes[0].video_id,
-        duration: savedNotes[0].video_duration,
-        channel: savedNotes[0].video_channel,
-        thumbnailUrl: savedNotes[0].video_thumbnail_url,
-      };
-      setVideoData(videoData);
-      setTimeout(() => {
-        router.push(`/notes/${videoId}`);
-      }, 2500);
+        if (savedNotes && savedNotes?.length > 0) {
+          toast.error(
+            "Notes already saved for this video. Redirecting to notes page..."
+          );
+          setIsGenerating(false);
+          setIsFetchingVideoData(false);
+          const notes: Notes = {
+            summary: JSON.parse(savedNotes[0]?.content)?.summary,
+            keyPoints: JSON.parse(savedNotes[0]?.content)?.keyPoints,
+            sections: JSON.parse(savedNotes[0]?.content)?.sections,
+          };
+          setNotes(notes);
+          const videoData: VideoData = {
+            title: savedNotes[0].video_title,
+            videoId: savedNotes[0].video_id,
+            duration: savedNotes[0].video_duration,
+            channel: savedNotes[0].video_channel,
+            thumbnailUrl: savedNotes[0].video_thumbnail_url,
+          };
+          setVideoData(videoData);
+          setTimeout(() => {
+            router.push(`/notes/${videoId}`);
+          }, 2500);
 
-      return;
-    }
-     }
+          return;
+        }
+      }
 
       const videoData = await VideoService.getVideoDetails(videoId);
       setVideoData(videoData);
       setIsFetchingVideoData(false);
 
-      //   const notes = await NotesService.generateNotes(videoId);
-      //   setNotes(notes);
+      const notes = await NotesService.generateNotes(videoId);
+      setNotes(notes);
       //  !  USING MOCK DATA TO AVOID API CALLS
-      const notes = generateNotesResponse?.notes;
-      setNotes(convertMarkdownToJson(notes) as Notes);
+      // const notes = generateNotesResponse?.notes;
+      // setNotes(convertMarkdownToJson(notes) as Notes);
       setIsFetchingVideoData(false);
     } catch (error) {
       setError(
