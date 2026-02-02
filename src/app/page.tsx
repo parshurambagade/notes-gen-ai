@@ -18,7 +18,7 @@ const Home = () => {
     <main className="min-h-screen pt-24 md:pt-28 pb-20">
       <section
         aria-label="Hero section"
-        className="container mx-auto px-4 md:px-6"
+        className="container mx-auto px-4 md:px-6 h-full mt-24 flex flex-col  items-center justify-center"
       >
         <div className="max-w-2xl mx-auto text-center space-y-3">
           <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">
@@ -56,8 +56,8 @@ const Home = () => {
         <Activity
           mode={
             notes &&
-            Object.keys(notes).length > 0 &&
-            (!isFetchingVideoData && !isGenerating)
+              Object.keys(notes).length > 0 &&
+              (!isFetchingVideoData && !isGenerating)
               ? "visible"
               : "hidden"
           }
@@ -68,7 +68,7 @@ const Home = () => {
       <ReplaceNotesAlert
         open={openReplaceNotesAlert}
         setOpen={setOpenReplaceNotesAlert}
-        onReplaceNotes={() => {}}
+        onReplaceNotes={() => { }}
       />
       <LoginRequiredPopup
         open={showLoginPopup}
