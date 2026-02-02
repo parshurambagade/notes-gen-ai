@@ -1,108 +1,164 @@
-# 📘 NotesGen AI – Smart YouTube Notes Generator
+## NotesGen AI
 
-An AI-powered web app that generates structured notes from YouTube videos using Google Generative AI. Built with Next.js 14 App Router, TypeScript, Zustand, Tailwind CSS, and Supabase.
+Generate **structured, readable study notes** from YouTube lectures—then **save, revisit, and manage** them with authentication.
 
-> 🚀 Generate concise notes from educational videos instantly with AI. Perfect for students, creators, and lifelong learners.
+This project is built to showcase end-to-end product thinking: clean UX, reliable data flow, auth + persistence, and practical API boundaries.
 
-![Screenshot](public/screenshot.png)
+## Demo
 
----
+- **Screenshots** (add yours)
+  - `./docs/screenshots/home.png`
+  - `./docs/screenshots/generated-notes.png`
+  - `./docs/screenshots/all-notes.png`
+  - `./docs/screenshots/login.png`
+- **Screen recording**
+  - Add a link here (YouTube/Drive/Dropbox) or embed a GIF in this section.
 
-## ✨ Features
+## Key features (what a recruiter cares about)
 
-- 🎯 **AI Notes Generation**: Generate smart notes using Google Generative AI.
-- 📺 **YouTube Integration**: Extract transcripts and generate context-aware summaries.
-- 💾 **Smart Caching**: Caches notes for 24 hours to avoid redundant API calls and reduce cost.
-- 🗂️ **Saved Notes Management**: Save, view, and delete notes with a dedicated dashboard.
-- 🔐 **Authentication**: Secure login/signup with Supabase Auth.
-- ⚙️ **Global State Management**: Used Zustand stores for saved notes, caching, and app state.
-- 📱 **Responsive UI**: Mobile and tablet-friendly layout using Tailwind CSS + ShadCN.
-- 📊 **Cache Statistics**: Track cache behavior and expiry.
+- **YouTube URL → structured notes**: Validates input, extracts video id, generates notes via API route.
+- **Persisted notes library**: “All Notes” grid for fast retrieval, with detail pages per video.
+- **Authentication + gated actions**: Save/delete are restricted to signed-in users.
+- **Production-grade UX**: loading states, empty states, and clear navigation.
+- **Separation of concerns**: UI components, hooks, services, and API routes are split cleanly.
 
----
+## Tech stack
 
-## 🛠️ Tech Stack
+- **Frontend**: Next.js (App Router), React, TypeScript
+- **Styling/UI**: Tailwind CSS + shadcn/ui components
+- **State**: Zustand (`src/stores/`)
+- **Backend**: Next.js Route Handlers (`src/app/api/`)
+- **DB/Auth**: Supabase
 
-| Category       | Tech Used                                      |
-| -------------- | ---------------------------------------------- |
-| Framework      | [Next.js 14 (App Router)](https://nextjs.org/) |
-| Language       | TypeScript                                     |
-| Styling        | Tailwind CSS, ShadCN UI                        |
-| State Mgmt     | Zustand, Context API                           |
-| AI Integration | Google Generative AI (via fetch API)           |
-| Auth           | Supabase Auth                                  |
-| Data Handling  | REST API                                       |
-| Hosting        | Vercel                                         |
+## Project structure (high-level)
 
----
-
-## 📸 Demo
-
-🔗 **Live App:** [notes-gen-ai.vercel.app](https://notes-gen-ai.vercel.app)  
-🔗 **Portfolio:** [mrparshu.live](https://mrparshu.live)
-
----
-
-## 🚀 Getting Started
-
-### 1. Clone the repo
-
-```bash
-git clone https://github.com/parshuram-bagade/notes-gen-ai.git
-
-cd notes-gen-ai
+```
+src/
+  app/                    # Next.js routes (pages + API route handlers)
+    api/                  # Backend endpoints (notes generation, video, etc.)
+    notes/                # Notes pages (detail + all notes)
+    auth/                 # Login/Register pages
+  components/             # UI building blocks (layouts, notes, ui)
+  hooks/                  # Data + mutation hooks (generate, get notes, auth)
+  services/               # External/service-layer logic (video, transcript, notes)
+  lib/                    # Utilities (supabase clients, youtube parsing, time, validation)
+  stores/                 # Zustand stores (global, user)
+  types/                  # Shared TypeScript types
 ```
 
-### 2. Install dependencies
+## How it works (short, recruiter-friendly)
+
+- **Client** validates and extracts a YouTube video id.
+- **Server route** generates notes and returns a structured JSON shape.
+- **Client** renders notes with clear sections (summary, key points, detailed notes).
+- **Supabase** stores notes rows per user + video id; saved notes are fetched and listed in “All Notes”.
+
+## Getting started (local)
+
+### Prerequisites
+
+- Node.js 18+ (recommended)
+- A Supabase project (URL + anon key)
+
+### Install
 
 ```bash
-pnpm install
+npm install
 ```
 
-### 3. Set up environment variables
+### Environment variables
 
-Create a .env.local file:
+Create a `.env.local` in the project root.
 
-```text
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
-NEXT_PUBLIC_YOUTUBE_API_KEY=
-NEXT_GEMINI_API_KEY=
-NEXTAUTH_URL=http://localhost:3000
-NEXT_YOUTUBE_TRANSCRIPT_RAPID_API_API_KEY=
-NEXT_YOUTUBE_TRANSCRIPT_RAPID_API_HOST=
-```
-
-### 4. Run the dev server
+You’ll need (names may vary—check `src/lib/supabase/*`):
 
 ```bash
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+```
+
+If your notes generation endpoint needs additional secrets (LLM keys, etc.), add them here as well.
+
+### Run
+
+```bash
+npm run dev
+```
+
+Open `http://localhost:3000`.
+
+## Common workflows
+
+- **Generate notes**: Paste a YouTube URL on Home → Generate.
+- **Save notes**: Click “Save Notes” (requires login).
+- **View saved notes**: Go to “All Notes” → open a note.
+- **Delete notes**: Open a saved note → Delete.
+
+## Engineering highlights (why this is built the way it is)
+
+- **Clean boundaries**: API routes handle server work; hooks encapsulate data fetching/mutations; components stay presentational.
+- **Type safety**: Shared `types/` reduce runtime surprises and make refactors safer.
+- **UX-first states**: deliberate empty/loading/error states; navigation supports back-tracking.
+- **Maintainability**: folder layout supports adding features (export, sharing, search) without rewiring the app.
+
+## Screenshots & recording checklist (for recruiters)
+
+Include these to make the repo instantly scannable:
+
+- Home + input validation error state
+- Notes generation loading state
+- Generated notes view (summary + key points + detailed notes)
+- Save/Delete flows (with auth gating)
+- All Notes grid
+
+## Roadmap (optional, but signals product thinking)
+
+- Notes export (PDF/Markdown)
+- Search & filtering in “All Notes”
+- Better transcript status/progress
+- Tagging + collections
+
+## Deployment
+
+- Works well on Vercel (Next.js App Router).
+- Ensure your environment variables are set in the hosting provider.
+
+## Author
+
+- Parshuram Bagade
+- Add: LinkedIn, portfolio, and email here
+
+## Getting Started
+
+First, run the development server:
+
+```bash
+npm run dev
+# or
+yarn dev
+# or
 pnpm dev
+# or
+bun dev
 ```
 
----
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## 📂 Folder Structure
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-```
-app/                 → Next.js App Router Pages & Layouts
-components/          → Reusable UI Components
-hooks/               → Custom React Hooks
-lib/                 → Services, utils, and types
-store/               → Zustand Global State Stores
-public/              → Static files (images, icons, etc.)
-```
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
----
+## Learn More
 
-## 🤝 Contributions
+To learn more about Next.js, take a look at the following resources:
 
-Feel free to fork the repo, raise issues, or open PRs.
-For major changes, please open an issue first to discuss what you’d like to change.
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
----
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## 📧 Contact
+## Deploy on Vercel
 
-Made with ❤️ by Parshuram Bagade
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-🔗 Connect on [LinkedIn](https://www.linkedin.com/in/parshuram-bagade/) | ✉️ [parshuram.dev@outlook.com](mailto:parshuram.dev@outlook.com)
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
