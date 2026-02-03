@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { validateLoginForm } from "@/lib/validation";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
@@ -12,8 +12,6 @@ export const useLogin = () => {
   const [error, setError] = useState<string | null>(null);
 
   const router = useRouter();
-
-  const searchParams = useSearchParams();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,6 +45,7 @@ export const useLogin = () => {
       if (data.user) {
         toast.success("Logged in successfully");
         router.replace("/");
+        router.refresh();
       }
     } catch (error) {
       toast.error(

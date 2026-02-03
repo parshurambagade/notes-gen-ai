@@ -55,6 +55,7 @@ export default function MainHeader() {
                   <Link
                     key={item.name}
                     href={item.href}
+                    prefetch={item.href.startsWith("/notes") ? false : undefined}
                     className={cn(
                       "relative px-3 py-2 rounded-md text-sm font-medium transition-colors",
                       isActive
@@ -181,6 +182,7 @@ export default function MainHeader() {
                   <Link
                     key={item.name}
                     href={item.href}
+                    prefetch={item.href.startsWith("/notes") ? false : undefined}
                     onClick={() => setIsMobileMenuOpen(false)}
                     className={cn(
                       "block relative px-3 py-2.5 rounded-md text-base font-medium transition-colors",
